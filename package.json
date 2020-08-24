@@ -1,0 +1,46 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "just another dev/sec/ops/engineer blog",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -r ./build/*",
+    "lint": "tslint -c tslint.json -p tsconfig.json --fix",
+    "build-typescript": "tsc --outdir build",
+    "copy-assets": "cp -r src/views build/views",
+    "build": "npm-run-all clean lint build-typescript copy-assets",
+    "start": "nodemon .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phvietan/blog.git"
+  },
+  "keywords": [
+    "blog",
+    "security",
+    "developer",
+    "engineer",
+    "hack"
+  ],
+  "author": "anpham",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/phvietan/blog/issues"
+  },
+  "homepage": "https://github.com/phvietan/blog#readme",
+  "devDependencies": {
+    "@tsconfig/node12": "^1.0.7",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.7",
+    "nodemon": "^2.0.4",
+    "npm-run-all": "^4.1.5",
+    "tslint": "^6.1.3",
+    "typescript": "^4.0.2"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1"
+  }
+}
