@@ -1,5 +1,5 @@
 {
-    "ext": "ts, ejs, js",
+    "ext": "ts, html",
     "watch": ["src", "src/api", "src/view"],
     "exec": "npm run build && node build/index.js"
 }

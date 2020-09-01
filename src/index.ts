@@ -1,21 +1,30 @@
 import path from "path";
+import helmet from "helmet";
 import dotenv from "dotenv";
 import express from "express";
+import nunjucks from "nunjucks";
 
 dotenv.config();
+
 const app = express();
 
-const port = process.env.APP_PORT;
+app.use(helmet());
+app.use(helmet.frameguard({ action: 'deny' }));
 
-app.set( "views", path.join( __dirname, "views" ) );
-app.set( "view engine", "ejs" );
+const env = nunjucks.configure(
+    path.join("src", "views"), {
+    autoescape: true,
+    express: app,
+});
+
+env.addGlobal("HTML_TITLE", process.env.HTML_TITLE);
+env.addGlobal("HTML_DESCRIPTION", process.env.HTML_DESCRIPTION);
 
 app.get( "/", ( req, res ) => {
-    console.log("!");
-    res.render("index");
+    res.render("index.html");
 } );
 
-// start the express server
+const port = process.env.APP_PORT || 8000;
 app.listen( port, () => {
     console.log( `server started at http://localhost:${ port }` );
 } );

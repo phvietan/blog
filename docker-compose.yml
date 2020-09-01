@@ -1,0 +1,43 @@
+version: '3'
+services:
+    db:
+        image: postgres:latest
+        restart: on-failure
+        volumes:
+            - ./data:/var/lib/postgresql/data/ # persist data even if container shuts down
+        environment:
+            POSTGRES_USER: ${DATABASE_USER}
+            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+            POSTGRES_DB: ${DATABASE_NAME}
+        ports:
+            - "${DATABASE_PORT}:5432"
+        expose:
+            - ${DATABASE_PORT}
+            
+    blog:
+        build:
+            args:
+                - WORK_DIR=${WORK_DIR}
+                - APP_PORT=${APP_PORT}
+            context: .
+        restart: on-failure
+        env_file:
+            - .env
+        volumes:
+            - .:${WORK_DIR}
+        depends_on:
+            - db
+        expose:
+            - ${APP_PORT}
+
+    nginx:
+        build: "./nginx"
+        ports:
+            - "80:80"
+            - "443:443"
+        depends_on:
+            - "db"
+            - "blog"
+        volumes:
+            - ./nginx/:/archive/host/
+            - ./src/static/:/archive/static/
