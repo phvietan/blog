@@ -6,27 +6,74 @@
 
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" nonce="{{ nonce }}">
-        
         <meta name="og:type" property="og:type" content="blog">
         <meta name="og:title" property="og:title" content="{{ ARTICLE_TITLE }}">
         <meta name="og:description" property="og:description" content="{{ ARTICLE_DESCRIPTION }}">
         <meta name="og:image" property="og:image" content="{{ ARTICLE_IMAGE }}">
-
         <meta name="twitter:card" property="twitter:card" content="app">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" nonce="{{ nonce }}">
+        <link rel="stylesheet" href="/static/css/index.css" nonce="{{ nonce }}">
+        
+        <script defer src="/static/js/index.js" nonce="{{ nonce }}"></script>
     </head>
 
     <body>
-        <section class="section">
+      <div class="hero is-halfheight background-img-size">
+        <div class="hero-head">
+          <nav class="navbar">
             <div class="container">
-              <h1 class="title">
-                Hello World
-              </h1>
-              <p class="subtitle">
-                My first website with <strong>Bulma</strong>!
-              </p>
+              <div class="navbar-brand">
+                <span
+                  id="navbar-burger"
+                  class="navbar-burger burger"
+                  data-target="navbarMenuHeroA"
+                >
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+              </div>
+
+              <div id="navbarMenuHeroA" class="navbar-menu">
+                <div class="navbar-end">
+                  <a class="button navbar-item is-active">
+                    Home
+                  </a>
+                  <a class="is-primary navbar-item">
+                    Examples
+                  </a>
+                  <a class="button is-primary navbar-item">
+                    Documentation
+                  </a>
+                </div>
+              </div>
             </div>
-          </section>
+          </nav>
+        </div>
+
+        <div class="blured-background"></div>
+
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <h1 class="title is-light">
+              Title
+            </h1>
+            <h2 class="subtitle is-light">
+              Subtitle
+            </h2>
+          </div>
+        </div>
+      </div>
+
+      con cac 
+      con cac 
+      con cac 
+      con cac 
+      con cac 
+      con cac 
+      con cac 
+      con cac 
+      con cac 
     </body>
 </html>

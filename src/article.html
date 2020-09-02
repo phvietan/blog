@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ HTML_TITLE }}</title>
+        <meta name="description" content="{{ HTML_DESCRIPTION }}">
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" nonce="{{ nonce }}">
+        <link rel="stylesheet" href="/static/css/index.css" nonce="{{ nonce }}">
+        
+        <meta name="og:type" property="og:type" content="blog">
+        <meta name="og:title" property="og:title" content="{{ ARTICLE_TITLE }}">
+        <meta name="og:description" property="og:description" content="{{ ARTICLE_DESCRIPTION }}">
+        <meta name="og:image" property="og:image" content="{{ ARTICLE_IMAGE }}">
+
+        <meta name="twitter:card" property="twitter:card" content="app">
+    </head>
+
+    <body>
+      <section class="hero is-large has-bg-img">
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <h1 class="title">Title 1</h1> 
+            <h2 class="subtitle">Subtitle 3</h2> 
+          </div>
+        </div>
+      </section>
+
+      <section class="hero is-primary is-medium">
+        <div class="hero-body has-bg-img">
+          <div class="container">
+            <h1 class="title">
+              Medium title
+            </h1>
+            <h2 class="subtitle">
+              Medium subtitle
+            </h2>
+          </div>
+        </div>
+      </section>
+      
+    </body>
+</html>
