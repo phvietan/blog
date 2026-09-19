@@ -1,0 +1,9 @@
+SITE_URL="http://localhost:8787"
+OAUTH_ISSUER="https://sso.drstra.in"
+OAUTH_CLIENT_ID="your-blog-client-id"
+OAUTH_SECRET="your-blog-client-secret"
+OAUTH_REDIRECT_URI="http://localhost:8787/oauth2/callback"
+EMAIL_FROM="noreply@sso.drstra.in"
+EMAIL_TO="phvietan@gmail.com"
+# Comma-separated SSO profile sub values permitted to publish.
+ADMIN_SUBS="your-sso-user-id"

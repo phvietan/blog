@@ -1,0 +1,31 @@
+{
+  "name": "drstrain-blog-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "check": "tsc --noEmit",
+    "test": "bun test",
+    "build": "wrangler deploy --dry-run --outdir dist",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 migrations apply DB --local",
+    "db:remote": "wrangler d1 migrations apply DB --remote",
+    "import:local": "bun scripts/import-hugo.ts",
+    "types": "wrangler types"
+  },
+  "dependencies": {
+    "hono": "^4.13.8",
+    "marked": "^18.0.13",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260702.1",
+    "@types/bun": "latest",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.86.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

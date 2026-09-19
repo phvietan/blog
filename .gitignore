@@ -1,0 +1,8 @@
+node_modules/
+.wrangler/
+dist/
+.dev.vars
+.env*
+!.env.example
+worker-configuration.d.ts
+public/legacy/
