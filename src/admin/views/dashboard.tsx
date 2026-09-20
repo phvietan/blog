@@ -102,14 +102,17 @@ export function Admin({
               {cm.title} · {cm.status}
             </small>
             <strong>{cm.name}</strong>
-            {cm.is_admin && (!cm.author_sub || cm.author_sub === userSub) ? (
-              <form action={`/comments/${cm.id}/edit`} method="post" class="comment-edit">
-                <input type="hidden" name="return_to" value="/admin" />
-                <textarea name="body" required minlength={2} maxlength={4000} rows={3}>{cm.body}</textarea>
-                <button class="button secondary" type="submit">Save edit</button>
-              </form>
-            ) : <p>{cm.body}</p>}
+            <p>{cm.body}</p>
             <div class="toolbar">
+              {!!cm.is_admin && (!cm.author_sub || cm.author_sub === userSub) && (
+                <button
+                  type="button"
+                  class="text-button"
+                  data-open-modal={`edit-comment-${cm.id}`}
+                >
+                  Edit
+                </button>
+              )}
               {cm.status === "pending" && (
                 <form action={`/admin/comments/${cm.id}/approve`} method="post">
                   <button class="button secondary">Approve</button>
@@ -119,6 +122,35 @@ export function Admin({
                 <button class="text-button danger">Delete</button>
               </form>
             </div>
+            {!!cm.is_admin && (!cm.author_sub || cm.author_sub === userSub) && (
+              <dialog class="edit-dialog" id={`edit-comment-${cm.id}`}>
+                <form action={`/comments/${cm.id}/edit`} method="post">
+                  <input type="hidden" name="return_to" value="/admin" />
+                  <h2>Edit comment</h2>
+                  <textarea
+                    name="body"
+                    required
+                    minlength={2}
+                    maxlength={4000}
+                    rows={6}
+                  >
+                    {cm.body}
+                  </textarea>
+                  <div class="dialog-actions">
+                    <button
+                      type="button"
+                      class="button secondary"
+                      data-close-modal
+                    >
+                      Cancel
+                    </button>
+                    <button class="button" type="submit">
+                      Save edit
+                    </button>
+                  </div>
+                </form>
+              </dialog>
+            )}
           </article>
         ))}
       </section>

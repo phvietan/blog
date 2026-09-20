@@ -1,6 +1,6 @@
-# DrStrain's blog
+# phvietan
 
-A Cloudflare Worker written in TypeScript with Hono JSX server rendering, Bun tooling, R2 Markdown storage, and D1 for posts, tags, sessions, likes, comments, and email retries. The existing Hugo blog is kept in `drstrain-blog/`.
+A personal application-security blog by Viet An Pham, built as a Cloudflare Worker with TypeScript, Hono JSX server rendering, Bun tooling, R2 Markdown storage, and D1.
 
 ## Source layout
 
@@ -59,7 +59,7 @@ Post authors are trusted administrators. Markdown supports raw HTML, including y
 - Editor: upload `.md` or `.markdown` (up to 1 MiB), edit Markdown, preview, save drafts, or publish. Select multiple tags. Publication dates are UTC; scheduling is not implemented.
 - Public index: ten posts per page, tag filtering, automatic loading on scroll, and crawlable pagination links that work without JavaScript.
 - Post pages: SSR content and approved comments, atomic public view count, anonymous likes, and anonymous comments/replies. Views count HTML requests, including refreshes and crawlers; they are not unique visitors. HEAD requests do not count.
-- Likes are idempotent per post and anonymous browser cookie. Clearing cookies or using another browser permits another like. IP-based request limits reduce casual abuse.
+- Likes are idempotent per post and anonymous browser cookie. Clearing cookies or using another browser permits another like.
 - Comments accept an optional `comment_id` pointing to an approved comment on the same post. The UI shows the parent and a reply link. Anonymous comments await moderation; authenticated admin comments publish immediately and show an Author badge. Comments are paginated in groups of 50, with direct links that locate the correct page.
 - SEO: canonical URLs, Open Graph/Twitter metadata, BlogPosting JSON-LD, `/sitemap.xml`, `/rss.xml`, `/robots.txt`, and `/llms.txt`. `/index.xml` redirects to RSS. Drafts are excluded from all public routes and feeds. No client-side rendering is required to read a post.
 
@@ -76,8 +76,8 @@ Comment insertion and outbox insertion are one D1 transaction. Delivery is attem
 The checked-in database ID and OAuth client ID are placeholders. No remote resources are created by local commands.
 
 ```sh
-bunx wrangler d1 create drstrain-blog
-bunx wrangler r2 bucket create drstrain-blog
+bunx wrangler d1 create phvietan-blog
+bunx wrangler r2 bucket create phvietan-blog
 ```
 
 Put the returned D1 ID in `wrangler.jsonc`; set `SITE_URL`, the OAuth client ID and callback, `ADMIN_EMAILS`, `EMAIL_FROM`, and `EMAIL_TO`. Configure the email sender/destination above, then:

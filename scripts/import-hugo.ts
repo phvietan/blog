@@ -15,7 +15,7 @@ import { excerpt, parseMarkdown, minutes, slugify } from "../src/lib/content";
 // Local only. Restore missing import objects, but never overwrite editor changes.
 if (process.argv.includes("--remote"))
   throw new Error("This importer only writes local development data.");
-const source = process.argv[2] || "drstrain-blog";
+const source = process.argv[2] || "legacy-blog";
 const run = (...args: string[]) =>
   execFileSync("node", ["node_modules/wrangler/bin/wrangler.js", ...args], {
     encoding: "utf8",
@@ -58,7 +58,7 @@ try {
           "r2",
           "object",
           "get",
-          `drstrain-blog/${previous.r2_key}`,
+          `phvietan-blog/${previous.r2_key}`,
           "--local",
           "--file",
           join(temp, "existing.md"),
@@ -81,7 +81,7 @@ try {
       "r2",
       "object",
       "put",
-      `drstrain-blog/${key}`,
+      `phvietan-blog/${key}`,
       "--local",
       "--file",
       file,
@@ -93,7 +93,7 @@ try {
       "r2",
       "object",
       "get",
-      `drstrain-blog/${key}`,
+      `phvietan-blog/${key}`,
       "--local",
       "--file",
       join(temp, "saved.md"),

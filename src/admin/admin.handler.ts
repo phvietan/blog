@@ -127,7 +127,11 @@ export const deleteTag: Handler<App> = async (c) => {
   return c.redirect("/admin", 303);
 };
 export const approveComment: Handler<App> = async (c) => {
-  await comments.updateComment(c.env.DB, parseId(c.req.param("id")!), "approved");
+  await comments.updateComment(
+    c.env.DB,
+    parseId(c.req.param("id")!),
+    "approved",
+  );
   return c.redirect("/admin", 303);
 };
 export const deleteComment: Handler<App> = async (c) => {

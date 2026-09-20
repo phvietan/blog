@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "drstrain-blog",
+  "name": "phvietan-blog",
   "main": "src/index.ts",
   "compatibility_date": "2026-04-01",
   "compatibility_flags": ["nodejs_compat"],
@@ -10,15 +10,15 @@
     "EMAIL_FROM": "noreply@sso.drstra.in",
     "EMAIL_TO": "phvietan@gmail.com",
     "SITE_URL": "https://blog.drstra.in",
-    "SITE_TITLE": "DrStrain's blog",
+    "SITE_TITLE": "phvietan",
     "SITE_DESCRIPTION": "My information security journey. Research, write-ups, and notes from the field.",
     "OAUTH_ISSUER": "https://sso.drstra.in",
     "OAUTH_CLIENT_ID": "kdo9-jfJ2ITzJKp15IlXaw",
     "OAUTH_REDIRECT_URI": "https://blog.drstra.in/oauth2/callback",
     "ADMIN_EMAILS": "admin@drstra.in,phvietan@gmail.com,anpham@bytedance.com"
   },
-  "d1_databases": [{ "binding": "DB", "database_name": "drstrain-blog", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrations" }],
-  "r2_buckets": [{ "binding": "BUCKET", "bucket_name": "drstrain-blog" }],
+  "d1_databases": [{ "binding": "DB", "database_name": "phvietan-blog", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrations" }],
+  "r2_buckets": [{ "binding": "BUCKET", "bucket_name": "phvietan-blog" }],
   "send_email": [{ "name": "EMAIL" }],
   "triggers": { "crons": ["*/5 * * * *"] }
 }

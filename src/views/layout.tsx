@@ -29,7 +29,7 @@ export function Layout({
         datePublished: article.published_at,
         dateModified: article.updated_at,
         mainEntityOfPage: canonical,
-        author: { "@type": "Person", name: "DrStrain", url: env.SITE_URL },
+        author: { "@type": "Person", name: "Viet An Pham", url: env.SITE_URL },
         keywords: article.tags.map((t) => t.name),
       }
     : {
@@ -105,10 +105,7 @@ export function Layout({
           </a>
           <header class="site-header wrap">
             <a class="brand" href="/">
-              <span class="brand-mark">
-                d<span>.</span>
-              </span>
-              DrStrain
+              phvietan
             </a>
             <nav aria-label="Main navigation">
               <a href="/">Home</a>
@@ -130,7 +127,7 @@ export function Layout({
             {children}
           </main>
           <footer class="wrap">
-            <span>© {new Date().getUTCFullYear()} DrStrain</span>
+            <span>© {new Date().getUTCFullYear()} Viet An Pham</span>
             <div>
               <a href="https://github.com/phvietan">GitHub ↗</a>
               <a href="/rss.xml">RSS ↗</a>

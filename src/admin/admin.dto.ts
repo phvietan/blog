@@ -1,28 +1,33 @@
 import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
-import {
-  MAX_MARKDOWN,
-  excerpt,
-  parseMarkdown,
-  slugify,
-} from "../lib/content";
+import { MAX_MARKDOWN, excerpt, parseMarkdown, slugify } from "../lib/content";
 import { validationError } from "../lib/validation";
 
-const fileSchema = z.instanceof(File).refine(
-  (file) => /\.(md|markdown)$/i.test(file.name),
-  "Upload a .md or .markdown file.",
-);
-const sourceSchema = z.string().refine(
-  (source) => new TextEncoder().encode(source).length <= MAX_MARKDOWN,
-  "Markdown too large.",
-);
+const fileSchema = z
+  .instanceof(File)
+  .refine(
+    (file) => /\.(md|markdown)$/i.test(file.name),
+    "Upload a .md or .markdown file.",
+  );
+const sourceSchema = z
+  .string()
+  .refine(
+    (source) => new TextEncoder().encode(source).length <= MAX_MARKDOWN,
+    "Markdown too large.",
+  );
 const postSchema = z
   .object({
     title: z.string().trim().min(1).max(180),
-    slug: z.string().max(120).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
-      message: "Use a URL slug containing lowercase letters, numbers, and hyphens.",
-    }),
-    description: z.string().max(160, "Keep the description under 160 characters."),
+    slug: z
+      .string()
+      .max(120)
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+        message:
+          "Use a URL slug containing lowercase letters, numbers, and hyphens.",
+      }),
+    description: z
+      .string()
+      .max(160, "Keep the description under 160 characters."),
     status: z.enum(["draft", "published"], { error: "Invalid post status." }),
     published_at: z.string().transform((value, ctx) => {
       const date = new Date(/T\d\d:\d\d$/.test(value) ? `${value}:00Z` : value);
@@ -36,30 +41,47 @@ const postSchema = z
     tags: z.array(z.coerce.number().int().positive().safe()).max(20),
   })
   .superRefine((post, ctx) => {
-    if (post.status === "published" && post.published_at.getTime() > Date.now() + 60_000) {
+    if (
+      post.status === "published" &&
+      post.published_at.getTime() > Date.now() + 60_000
+    ) {
       ctx.addIssue({
         code: "custom",
         path: ["published_at"],
-        message: "Use draft for future posts; scheduled publishing is not enabled.",
+        message:
+          "Use draft for future posts; scheduled publishing is not enabled.",
       });
     }
   });
-const tagSchema = z.string().trim().min(1).max(40)
+const tagSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(40)
   .refine((name) => slugify(name).length > 0, {
     message: "Use a tag name of 1–40 characters with letters or numbers.",
   })
   .transform((name) => ({ name, slug: slugify(name) }));
 
-export const field = (form: FormData, key: string) => String(form.get(key) || "").trim();
+export const field = (form: FormData, key: string) =>
+  String(form.get(key) || "").trim();
 
 export async function parsePreview(form: FormData) {
   const upload = form.get("file");
   let source: string;
   try {
-    const file = upload instanceof File && upload.size ? fileSchema.parse(upload) : undefined;
-    source = sourceSchema.parse(file ? await file.text() : String(form.get("markdown") || ""));
+    const file =
+      upload instanceof File && upload.size
+        ? fileSchema.parse(upload)
+        : undefined;
+    source = sourceSchema.parse(
+      file ? await file.text() : String(form.get("markdown") || ""),
+    );
   } catch (error) {
-    if (error instanceof z.ZodError && error.issues[0]?.message === "Markdown too large.") {
+    if (
+      error instanceof z.ZodError &&
+      error.issues[0]?.message === "Markdown too large."
+    ) {
       validationError(error, 413);
     }
     validationError(error);
@@ -78,9 +100,12 @@ export async function parsePost(form: FormData) {
     const post = postSchema.parse({
       title,
       slug: field(form, "slug") || slugify(String(data.slug || title)),
-      description: field(form, "description") || excerpt(String(data.description || body)),
+      description:
+        field(form, "description") || excerpt(String(data.description || body)),
       status: field(form, "status"),
-      published_at: field(form, "published_at") || String(data.date || new Date().toISOString()),
+      published_at:
+        field(form, "published_at") ||
+        String(data.date || new Date().toISOString()),
       body,
       tags: [...new Set(form.getAll("tags").map(String))],
     });

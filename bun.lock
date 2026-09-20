@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "drstrain-blog-worker",
+      "name": "phvietan-blog-worker",
       "dependencies": {
         "hono": "^4.13.8",
         "marked": "^18.0.13",

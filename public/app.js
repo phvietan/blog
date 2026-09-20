@@ -92,3 +92,12 @@ editor?.addEventListener('input', () => { dirty = true; });
 editor?.addEventListener('submit', () => { dirty = false; });
 window.addEventListener('beforeunload', event => { if (dirty) { event.preventDefault(); event.returnValue = ''; } });
 document.querySelectorAll('[data-confirm]').forEach(form => form.addEventListener('submit', event => { if (!confirm(form.dataset.confirm)) event.preventDefault(); }));
+document.querySelectorAll('[data-open-modal]').forEach(button => button.addEventListener('click', () => {
+ const dialog = document.getElementById(button.dataset.openModal);
+ dialog?.showModal();
+ dialog?.querySelector('textarea')?.focus();
+}));
+document.querySelectorAll('[data-close-modal]').forEach(button => button.addEventListener('click', () => button.closest('dialog')?.close()));
+document.querySelectorAll('.edit-dialog').forEach(dialog => dialog.addEventListener('click', event => {
+ if (event.target === dialog) dialog.close();
+}));

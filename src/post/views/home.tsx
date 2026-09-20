@@ -33,7 +33,7 @@ export function Home({
       path={`/${params.size ? `?${params}` : ""}`}
     >
       <section class="home-intro">
-        <h1>DrStrain's blog</h1>
+        <h1>Viet An Pham</h1>
         <p>Application security, hacking, and notes from my own journey.</p>
       </section>
       <section id="posts" class="post-index" aria-label="Blog posts">

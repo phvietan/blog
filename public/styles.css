@@ -4,8 +4,13 @@
 
 .comment-reply{margin-left:28px;padding-left:20px;border-left:2px solid var(--line)}
 .comment-reply .reply-parent{color:var(--muted);font-size:11px;margin-bottom:8px}
-.comment .text-button{margin-top:4px}
-.comment-edit{margin:14px 0}.comment-edit textarea{margin-bottom:10px}.moderation .comment-edit{max-width:680px}
+.comment .text-button{margin-top:4px}.comment>.text-button{margin-right:18px}
+.edit-dialog{width:min(560px,calc(100% - 32px));padding:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);box-shadow:0 24px 80px #0007}.edit-dialog::backdrop{background:#0009}.edit-dialog form{padding:24px}.edit-dialog h2{margin:0 0 18px;font-size:1.25rem}.edit-dialog textarea{margin:0;min-height:150px}.dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.comment-thread>.thread-item>.comment{border-top:1px solid var(--line)}
+.comment-children{margin-left:28px;padding-left:20px;border-left:2px solid var(--line)}
+.comment-children .comment{border-top:0;padding:16px 0}
+.comment-children>.thread-item+.thread-item>.comment{border-top:1px solid var(--line)}
+.comment-children .comment-children{margin-left:18px;padding-left:16px}
 @media(max-width:760px){.comment-reply{margin-left:12px;padding-left:14px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
@@ -127,11 +132,12 @@ html[data-theme="light"] .theme-moon { display: inline; }
 .button.secondary { background: transparent; border-color: var(--line); color: var(--text); }
 .button.secondary:hover, .button[aria-pressed=true] { color: var(--accent); border-color: var(--accent); }
 footer { margin-top: 90px !important; }
+.article, .comments { max-width: 940px; }
 
 @media (max-width: 760px) {
   .wrap { width: calc(100% - 36px); }
   .site-header { height: 78px; }
-  .brand { font-size: 0; }
+  .brand { font-size: 16px; }
   .brand-mark { font-size: 24px; }
   .site-header nav { gap: 16px; font-size: 13px; }
   .site-header nav a[href="/#posts"] { display: none; }
@@ -140,4 +146,79 @@ footer { margin-top: 90px !important; }
   .post-card h2 a { display: block; }
   .post-card h2 time { display: block; margin-top: 7px; }
   .card-bottom { align-items: baseline; }
+}
+
+/* Public reading experience on phones */
+@media (max-width: 640px) {
+  body { overflow-x: hidden; }
+  main.wrap:not(.admin) { width: calc(100% - 32px); }
+
+  main:not(.admin) .home-intro { padding: 68px 0 64px; }
+  main:not(.admin) .home-intro h1 {
+    margin-bottom: 14px;
+    font-size: clamp(2.35rem, 13vw, 3.1rem);
+    line-height: 1.05;
+  }
+  main:not(.admin) .home-intro p {
+    max-width: 32rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  main:not(.admin) .section-heading { align-items: flex-start; }
+  main:not(.admin) .filters {
+    margin: 18px -16px 4px;
+    padding: 0 16px 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  main:not(.admin) .filters::-webkit-scrollbar { display: none; }
+  main:not(.admin) .filters a { flex: 0 0 auto; }
+  main:not(.admin) .post-card { padding: 22px 0; }
+  main:not(.admin) .post-card h2 { font-size: 1.08rem; line-height: 1.5; }
+  main:not(.admin) .post-card h2 a { gap: 8px; }
+  main:not(.admin) .post-card h2 time { font-size: .78rem; }
+  main:not(.admin) .card-bottom {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+  main:not(.admin) .stats { white-space: normal; }
+
+  main:not(.admin) .back { margin: 28px 0 16px; }
+  main:not(.admin) .article-header { margin-bottom: 28px; padding-bottom: 26px; }
+  main:not(.admin) .article-header h1 {
+    margin: 16px 0;
+    font-size: clamp(2rem, 11vw, 2.8rem);
+    line-height: 1.12;
+  }
+  main:not(.admin) .dek { font-size: 1rem; line-height: 1.7; }
+  main:not(.admin) .prose { font-size: 1rem; line-height: 1.8; }
+  main:not(.admin) .prose h1 { font-size: 1.7rem; }
+  main:not(.admin) .prose h2 { font-size: 1.4rem; }
+  main:not(.admin) .prose h3 { font-size: 1.2rem; }
+  main:not(.admin) .prose pre {
+    max-width: 100%;
+    margin-inline: 0;
+    padding: 14px;
+    font-size: .78rem;
+    border-radius: 7px;
+  }
+  main:not(.admin) .prose blockquote { margin: 24px 0; padding-left: 16px; }
+  main:not(.admin) .prose table { max-width: 100%; }
+  main:not(.admin) .article-end { gap: 16px; }
+
+  main:not(.admin) .comments { margin-top: 36px; }
+  main:not(.admin) .comment-form { padding: 20px 0; }
+  main:not(.admin) .comment-form > label:first-of-type { max-width: none; }
+  main:not(.admin) .form-footer { width: 100%; }
+  main:not(.admin) .form-footer .button { width: 100%; }
+  main:not(.admin) .comment > div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+  main:not(.admin) .comment-children { margin-left: 8px; padding-left: 12px; }
+  main:not(.admin) .comment-children .comment-children { margin-left: 6px; padding-left: 10px; }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "drstrain-blog-worker",
+  "name": "phvietan-blog-worker",
   "private": true,
   "type": "module",
   "scripts": {
