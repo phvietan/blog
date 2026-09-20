@@ -17,7 +17,12 @@
     "OAUTH_REDIRECT_URI": "https://blog.drstra.in/oauth2/callback",
     "ADMIN_EMAILS": "admin@drstra.in,phvietan@gmail.com,anpham@bytedance.com"
   },
-  "d1_databases": [{ "binding": "DB", "database_name": "phvietan-blog", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrations" }],
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "phvietan-blog",
+    "database_id": "0f77870c-a61d-43de-9a46-62fed19bbcd8",
+    "migrations_dir": "migrations"
+  }],
   "r2_buckets": [{ "binding": "BUCKET", "bucket_name": "phvietan-blog" }],
   "send_email": [{ "name": "EMAIL" }],
   "triggers": { "crons": ["*/5 * * * *"] }
