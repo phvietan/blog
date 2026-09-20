@@ -95,6 +95,9 @@ export function Layout({
             }}
           />
           <script src="/app.js" defer />
+          {article && env.TURNSTILE_SITE_KEY && (
+            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+          )}
         </head>
         <body>
           <a class="skip" href="#main">

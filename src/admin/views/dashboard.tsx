@@ -7,6 +7,7 @@ export function Admin({
   tags,
   comments,
   name,
+  userSub,
   page,
   more,
 }: {
@@ -15,6 +16,7 @@ export function Admin({
   tags: Tag[];
   comments: Comment[];
   name: string;
+  userSub: string;
   page: number;
   more: boolean;
 }) {
@@ -100,7 +102,13 @@ export function Admin({
               {cm.title} · {cm.status}
             </small>
             <strong>{cm.name}</strong>
-            <p>{cm.body}</p>
+            {cm.is_admin && (!cm.author_sub || cm.author_sub === userSub) ? (
+              <form action={`/comments/${cm.id}/edit`} method="post" class="comment-edit">
+                <input type="hidden" name="return_to" value="/admin" />
+                <textarea name="body" required minlength={2} maxlength={4000} rows={3}>{cm.body}</textarea>
+                <button class="button secondary" type="submit">Save edit</button>
+              </form>
+            ) : <p>{cm.body}</p>}
             <div class="toolbar">
               {cm.status === "pending" && (
                 <form action={`/admin/comments/${cm.id}/approve`} method="post">

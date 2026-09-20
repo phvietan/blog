@@ -3,7 +3,6 @@ import type { Context, MiddlewareHandler } from "hono";
 import type { App } from "../types";
 import { now, token, hash } from "../lib/crypto";
 import { getSession } from "../databases/session.db";
-import { incrementRateLimit } from "../databases/rate-limit.db";
 
 export const cookieOptions = (c: Context<App>, maxAge: number) => ({
   httpOnly: true,
@@ -13,17 +12,17 @@ export const cookieOptions = (c: Context<App>, maxAge: number) => ({
   maxAge,
 });
 
-export const allowed = (c: Context<App>, sub: string) =>
-  c.env.ADMIN_SUBS.split(",")
-    .map((s) => s.trim())
+export const allowed = (c: Context<App>, email: string) =>
+  c.env.ADMIN_EMAILS.split(",")
+    .map((value) => value.trim().toLowerCase())
     .filter(Boolean)
-    .includes(sub);
+    .includes(email.toLowerCase());
 
 export async function sessionUser(c: Context<App>) {
   const sid = getCookie(c, "blog_session");
   if (!sid) return null;
   const user = await getSession(c.env.DB, await hash(sid), now());
-  return user && allowed(c, user.sub) ? user : null;
+  return user && allowed(c, user.email) ? user : null;
 }
 
 export const requireAdmin: MiddlewareHandler<App> = async (c, next) => {
@@ -45,16 +44,4 @@ export async function visitor(c: Context<App>) {
     setCookie(c, "blog_visitor", id, cookieOptions(c, 31536000));
   }
   return hash(id);
-}
-
-export async function rateLimit(
-  c: Context<App>,
-  action: string,
-  max: number,
-  seconds: number,
-) {
-  const address = c.req.header("CF-Connecting-IP") || "local";
-  const key = await hash(`${action}:${address}`);
-  const row = await incrementRateLimit(c.env.DB, key, now(), seconds);
-  return !!row && row.count <= max;
 }

@@ -10,7 +10,7 @@ import {
 import { join, basename } from "node:path";
 import { tmpdir } from "node:os";
 import { execFileSync } from "node:child_process";
-import { parseMarkdown, plainText, minutes, slugify } from "../src/lib/content";
+import { excerpt, parseMarkdown, minutes, slugify } from "../src/lib/content";
 
 // Local only. Restore missing import objects, but never overwrite editor changes.
 if (process.argv.includes("--remote"))
@@ -36,7 +36,9 @@ try {
       "--json",
     ),
   ) as { results: { slug: string; r2_key: string }[] }[];
-  const posts = new Map(existing.flatMap((r) => r.results.map((p) => [p.slug, p] as const)));
+  const posts = new Map(
+    existing.flatMap((r) => r.results.map((p) => [p.slug, p] as const)),
+  );
   let count = 0;
   let restored = 0;
   for (const name of await readdir(join(source, "content/posts"))) {
@@ -47,17 +49,25 @@ try {
     const slug = slugify(String(data.slug || basename(name, ".md")));
     const previous = posts.get(slug);
     if (previous) {
-      if (!previous.r2_key.endsWith('/import.md')) {
+      if (!previous.r2_key.endsWith("/import.md")) {
         console.log(`Skipping edited /posts/${slug}/`);
         continue;
       }
       try {
-        run('r2', 'object', 'get', `drstrain-blog/${previous.r2_key}`, '--local', '--file', join(temp, 'existing.md'));
+        run(
+          "r2",
+          "object",
+          "get",
+          `drstrain-blog/${previous.r2_key}`,
+          "--local",
+          "--file",
+          join(temp, "existing.md"),
+        );
         console.log(`Skipping existing /posts/${slug}/`);
         continue;
       } catch (error) {
-        const output = String((error as { stderr?: unknown }).stderr || '');
-        if (!output.includes('The specified key does not exist')) throw error;
+        const output = String((error as { stderr?: unknown }).stderr || "");
+        if (!output.includes("The specified key does not exist")) throw error;
       }
     }
     const key = previous?.r2_key || `posts/imports/${slug}/import.md`;
@@ -79,8 +89,16 @@ try {
       "text/markdown; charset=utf-8",
     );
     // Confirm persistence before creating metadata that points to this object.
-    run('r2', 'object', 'get', `drstrain-blog/${key}`, '--local', '--file', join(temp, 'saved.md'));
-    if (await readFile(join(temp, 'saved.md'), 'utf8') !== body) {
+    run(
+      "r2",
+      "object",
+      "get",
+      `drstrain-blog/${key}`,
+      "--local",
+      "--file",
+      join(temp, "saved.md"),
+    );
+    if ((await readFile(join(temp, "saved.md"), "utf8")) !== body) {
       throw new Error(`Stored Markdown did not match /posts/${slug}/`);
     }
     if (previous) {
@@ -89,7 +107,7 @@ try {
       continue;
     }
     const sql = [
-      `INSERT INTO posts(slug,title,description,r2_key,status,published_at,updated_at,reading_minutes) VALUES(${[slug, title, String(data.description || plainText(body).slice(0, 240)), key, data.draft === true ? "draft" : "published", date, date, minutes(body)].map(quote).join(",")});`,
+      `INSERT INTO posts(slug,title,description,r2_key,status,published_at,updated_at,reading_minutes) VALUES(${[slug, title, excerpt(String(data.description || body)), key, data.draft === true ? "draft" : "published", date, date, minutes(body)].map(quote).join(",")});`,
     ];
     for (const name of Array.isArray(data.tags) ? data.tags.map(String) : []) {
       const tagSlug = slugify(name);

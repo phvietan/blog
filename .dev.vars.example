@@ -5,5 +5,8 @@ OAUTH_SECRET="your-blog-client-secret"
 OAUTH_REDIRECT_URI="http://localhost:8787/oauth2/callback"
 EMAIL_FROM="noreply@sso.drstra.in"
 EMAIL_TO="phvietan@gmail.com"
-# Comma-separated SSO profile sub values permitted to publish.
-ADMIN_SUBS="your-sso-user-id"
+# Comma-separated SSO email addresses permitted to publish.
+ADMIN_EMAILS="admin@drstra.in,phvietan@gmail.com,anpham@bytedance.com"
+# Optional on localhost. Create a Turnstile widget for production.
+TURNSTILE_SITE_KEY="your-turnstile-site-key"
+TURNSTILE_SECRET_KEY="your-turnstile-secret-key"

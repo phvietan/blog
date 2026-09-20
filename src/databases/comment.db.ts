@@ -2,7 +2,7 @@ import type { Comment } from "../types";
 
 export type CommentWrite = Pick<
   Comment,
-  "id" | "name" | "body" | "comment_id" | "is_admin" | "created_at"
+  "id" | "name" | "body" | "comment_id" | "is_admin" | "author_sub" | "created_at"
 > & {
   post_id: number;
   visitor: string;
@@ -15,7 +15,7 @@ export async function createComment(
   // The comments_notify trigger queues non-admin email in this same transaction.
   const row = await db
     .prepare(
-      "INSERT INTO comments(post_id,name,body,visitor,comment_id,is_admin,created_at,status) VALUES(?,?,?,?,?,?,?,?) RETURNING id",
+      "INSERT INTO comments(post_id,name,body,visitor,comment_id,is_admin,author_sub,created_at,status) VALUES(?,?,?,?,?,?,?,?,?) RETURNING id",
     )
     .bind(
       comment.post_id,
@@ -24,6 +24,7 @@ export async function createComment(
       comment.visitor,
       comment.comment_id,
       comment.is_admin,
+      comment.author_sub,
       comment.created_at,
       comment.status,
     )
@@ -52,7 +53,7 @@ export async function listApprovedComments(
 ) {
   const rows = await db
     .prepare(
-      "SELECT c.*,parent.name AS parent_name FROM comments c LEFT JOIN comments parent ON parent.id=c.comment_id WHERE c.post_id=? AND c.status='approved' ORDER BY c.created_at DESC,c.id DESC LIMIT 51 OFFSET ?",
+      "SELECT c.*,parent.name AS parent_name FROM comments c LEFT JOIN comments parent ON parent.id=c.comment_id WHERE c.post_id=? AND c.status='approved' ORDER BY COALESCE(parent.created_at,c.created_at) DESC,COALESCE(parent.id,c.id) DESC,CASE WHEN c.comment_id IS NULL THEN 0 ELSE 1 END,c.created_at ASC,c.id ASC LIMIT 51 OFFSET ?",
     )
     .bind(postId, (page - 1) * 50)
     .all<Comment>();
@@ -82,6 +83,17 @@ export function updateComment(
   return db
     .prepare("UPDATE comments SET status=? WHERE id=?")
     .bind(status, id)
+    .run();
+}
+export function updateAdminCommentBody(
+  db: D1Database,
+  id: number,
+  authorSub: string,
+  body: string,
+) {
+  return db
+    .prepare("UPDATE comments SET body=?,author_sub=COALESCE(author_sub,?) WHERE id=? AND is_admin=1 AND (author_sub=? OR author_sub IS NULL)")
+    .bind(body, authorSub, id, authorSub)
     .run();
 }
 export function deleteComment(db: D1Database, id: number) {

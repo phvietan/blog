@@ -8,6 +8,7 @@ export const oauthTokensSchema = z.object({ access_token: z.string().min(1) });
 export const oauthProfileSchema = z.object({
   sub: z.string().min(1),
   name: z.string().optional(),
+  email: z.string().email(),
 });
 
 export function parseCallback(query: Record<string, string>) {

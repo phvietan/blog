@@ -13,9 +13,9 @@
     "SITE_TITLE": "DrStrain's blog",
     "SITE_DESCRIPTION": "My information security journey. Research, write-ups, and notes from the field.",
     "OAUTH_ISSUER": "https://sso.drstra.in",
-    "OAUTH_CLIENT_ID": "configure-blog-client-id",
+    "OAUTH_CLIENT_ID": "kdo9-jfJ2ITzJKp15IlXaw",
     "OAUTH_REDIRECT_URI": "https://blog.drstra.in/oauth2/callback",
-    "ADMIN_SUBS": ""
+    "ADMIN_EMAILS": "admin@drstra.in,phvietan@gmail.com,anpham@bytedance.com"
   },
   "d1_databases": [{ "binding": "DB", "database_name": "drstrain-blog", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrations" }],
   "r2_buckets": [{ "binding": "BUCKET", "bucket_name": "drstrain-blog" }],

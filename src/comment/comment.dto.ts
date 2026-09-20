@@ -24,4 +24,12 @@ export function parseComment(form: FormData, adminName?: string) {
   }
 }
 
+export function parseCommentBody(form: FormData) {
+  try {
+    return commentSchema.shape.body.parse(form.get("body"));
+  } catch (error) {
+    validationError(error);
+  }
+}
+
 export type CommentDto = ReturnType<typeof parseComment>;

@@ -41,13 +41,15 @@ bun run build # Worker deployment dry run
 
 Bun manages packages and scripts. Wrangler runs under Node 22+ as recommended by [Cloudflare](https://developers.cloudflare.com/workers/wrangler/install-and-update/). Run `nvm use` to select the version in `.nvmrc`; forcing Wrangler through `bun --bun` can stall the local server.
 
+Anonymous comments use Cloudflare Turnstile in production. Set `TURNSTILE_SITE_KEY` as a Worker variable and store `TURNSTILE_SECRET_KEY` with `wrangler secret put TURNSTILE_SECRET_KEY`. Turnstile is skipped on localhost when no secret is configured.
+
 ## SSO and admin access
 
 The flow matches `../r2-admin/` and `../sso/`: `/oauth/authorize`, `/oauth/token`, then `/oauth/profile:read`. OAuth state is checked with a short-lived HTTP-only cookie. Login sessions are stored in **D1**, with no KV binding. `/admin` starts SSO sign-in. Sessions last seven days; the cron removes expired records.
 
 1. Register a dedicated confidential OAuth client in your SSO admin. Allow `profile:read` and register `http://localhost:8787/oauth2/callback` for development and your production callback URL.
 2. Set `OAUTH_CLIENT_ID`, `OAUTH_SECRET`, and `OAUTH_REDIRECT_URI` in `.dev.vars`. The issuer is `https://sso.drstra.in`.
-3. Set `ADMIN_SUBS` to a comma-separated list of SSO profile `sub` IDs allowed to administer this blog. An empty list grants nobody access. It is checked on every admin request and before treating a comment as an admin comment.
+3. Set `ADMIN_EMAILS` to a comma-separated list of SSO email addresses allowed to administer this blog. An empty list grants nobody access. It is checked on every admin request and before treating a comment as an admin comment.
 
 Post authors are trusted administrators. Markdown supports raw HTML, including your existing images, video, and custom markup. Public comments are always JSX-escaped plain text. Requests that change data require a matching browser Origin.
 
@@ -78,7 +80,7 @@ bunx wrangler d1 create drstrain-blog
 bunx wrangler r2 bucket create drstrain-blog
 ```
 
-Put the returned D1 ID in `wrangler.jsonc`; set `SITE_URL`, the OAuth client ID and callback, `ADMIN_SUBS`, `EMAIL_FROM`, and `EMAIL_TO`. Configure the email sender/destination above, then:
+Put the returned D1 ID in `wrangler.jsonc`; set `SITE_URL`, the OAuth client ID and callback, `ADMIN_EMAILS`, `EMAIL_FROM`, and `EMAIL_TO`. Configure the email sender/destination above, then:
 
 ```sh
 bunx wrangler secret put OAUTH_SECRET

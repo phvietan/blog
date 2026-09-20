@@ -20,9 +20,11 @@ export type Env = {
   OAUTH_CLIENT_ID: string;
   OAUTH_SECRET: string;
   OAUTH_REDIRECT_URI: string;
-  ADMIN_SUBS: string;
+  ADMIN_EMAILS: string;
+  TURNSTILE_SITE_KEY?: string;
+  TURNSTILE_SECRET_KEY?: string;
 };
-export type User = { sub: string; name: string };
+export type User = { sub: string; name: string; email: string };
 export type App = { Bindings: Env; Variables: { user: User; visitor: string } };
 export type Tag = { id: number; name: string; slug: string };
 export type Post = {
@@ -48,5 +50,6 @@ export type Comment = {
   comment_id: number | null;
   parent_name?: string;
   is_admin: number;
+  author_sub: string | null;
   title?: string;
 };

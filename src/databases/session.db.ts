@@ -7,14 +7,16 @@ export function createSession(
   expiresAt: number,
 ) {
   return db
-    .prepare("INSERT INTO sessions VALUES(?,?,?,?)")
-    .bind(tokenHash, user.sub, user.name, expiresAt)
+    .prepare(
+      "INSERT INTO sessions(token_hash,sub,name,email,expires_at) VALUES(?,?,?,?,?)",
+    )
+    .bind(tokenHash, user.sub, user.name, user.email, expiresAt)
     .run();
 }
 export function getSession(db: D1Database, tokenHash: string, now: number) {
   return db
     .prepare(
-      "SELECT sub,name FROM sessions WHERE token_hash=? AND expires_at>?",
+      "SELECT sub,name,email FROM sessions WHERE token_hash=? AND expires_at>?",
     )
     .bind(tokenHash, now)
     .first<User>();

@@ -60,5 +60,15 @@ export const plainText = (source: string) =>
     .replace(/\s+/g, " ")
     .trim();
 
+export const excerpt = (source: string, max = 160) => {
+  const text = plainText(source);
+  if (text.length <= max) return text;
+  const shortened = text
+    .slice(0, max - 1)
+    .replace(/\s+\S*$/, "")
+    .trimEnd();
+  return `${shortened || text.slice(0, max - 1)}…`;
+};
+
 export const minutes = (source: string) =>
   Math.max(1, Math.ceil(source.trim().split(/\s+/).length / 220));

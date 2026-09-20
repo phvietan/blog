@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import type { App } from "../types";
-import { submitComment } from "./comment.handler";
+import { editComment, submitComment } from "./comment.handler";
 
 const route = new Hono<App>();
 route.post(
@@ -11,5 +11,10 @@ route.post(
     onError: (c) => c.text("Request too large.", 413),
   }),
   submitComment,
+);
+route.post(
+  "/comments/:id/edit",
+  bodyLimit({ maxSize: 8192, onError: (c) => c.text("Request too large.", 413) }),
+  editComment,
 );
 export default route;

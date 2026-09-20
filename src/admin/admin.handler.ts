@@ -27,6 +27,7 @@ export const dashboard: Handler<App> = async (c) => {
       tags: allTags,
       comments: recentComments,
       name: c.get("user").name,
+      userSub: c.get("user").sub,
     }),
   );
 };

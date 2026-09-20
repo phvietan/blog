@@ -10,6 +10,7 @@ export function Article({
   liked,
   commentPage,
   moreComments,
+  adminSub,
 }: {
   env: Env;
   post: Post;
@@ -18,6 +19,7 @@ export function Article({
   liked: boolean;
   commentPage: number;
   moreComments: boolean;
+  adminSub?: string;
 }) {
   return (
     <Layout
@@ -108,10 +110,16 @@ export function Article({
               Post comment ↗
             </button>
           </div>
+          {!adminSub && env.TURNSTILE_SITE_KEY && (
+            <div class="cf-turnstile" data-sitekey={env.TURNSTILE_SITE_KEY}></div>
+          )}
           <p role="status" data-comment-status />
         </form>
         {comments.map((comment) => (
-          <article class="comment" id={`comment-${comment.id}`}>
+          <article
+            class={`comment${comment.comment_id ? " comment-reply" : ""}`}
+            id={`comment-${comment.id}`}
+          >
             <div>
               <strong>
                 {comment.name}
@@ -123,24 +131,29 @@ export function Article({
                 {date(new Date(comment.created_at * 1000).toISOString())}
               </time>
             </div>
-            <p>
+            {comment.is_admin && adminSub && (!comment.author_sub || comment.author_sub === adminSub) ? (
+              <form action={`/comments/${comment.id}/edit`} method="post" class="comment-edit">
+                <textarea name="body" required minlength={2} maxlength={4000} rows={3}>{comment.body}</textarea>
+                <button class="text-button" type="submit">Save edit</button>
+              </form>
+            ) : <p>
               {comment.comment_id && (
                 <a
                   class="reply-parent"
                   href={`?comment=${comment.comment_id}#comment-${comment.comment_id}`}
                 >
-                  ↳ Reply to {comment.parent_name}
+                  Replying to {comment.parent_name}
                 </a>
               )}
               {comment.body}
-            </p>
+            </p>}
             <button
               type="button"
               class="text-button"
               data-reply={comment.id}
               data-name={comment.name}
             >
-              Reply ↗
+              Reply
             </button>
           </article>
         ))}

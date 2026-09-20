@@ -5,7 +5,6 @@ import { now, token, hash } from "../lib/crypto";
 import {
   cookieOptions,
   allowed,
-  rateLimit,
 } from "../middlewares/auth.middleware";
 import { createSession, deleteSession } from "../databases/session.db";
 import {
@@ -16,15 +15,13 @@ import {
 export const login: Handler<App> = async (c) => {
   if (
     !c.env.OAUTH_SECRET ||
-    !c.env.ADMIN_SUBS ||
+    !c.env.ADMIN_EMAILS ||
     c.env.OAUTH_CLIENT_ID.startsWith("configure-")
   )
     return c.text(
-      "Configure the blog OAuth client and ADMIN_SUBS before signing in. See README.md.",
+      "Configure the blog OAuth client and ADMIN_EMAILS before signing in. See README.md.",
       503,
     );
-  if (!(await rateLimit(c, "login", 20, 600)))
-    return c.text("Please try again later.", 429);
   const state = token();
   setCookie(c, "blog_oauth_state", state, cookieOptions(c, 600));
   const url = new URL("/oauth/authorize", c.env.OAUTH_ISSUER);
@@ -65,13 +62,13 @@ export const callback: Handler<App> = async (c) => {
     );
     if (!profileResponse.ok) throw new Error("Profile request failed");
     const profile = oauthProfileSchema.parse(await profileResponse.json());
-    if (!allowed(c, profile.sub))
+    if (!allowed(c, profile.email))
       return c.text("This SSO account is not a blog administrator.", 403);
     const sid = token();
     await createSession(
       c.env.DB,
       await hash(sid),
-      { sub: profile.sub, name: profile.name || "Admin" },
+      { sub: profile.sub, name: profile.name || "Admin", email: profile.email },
       now() + 604800,
     );
     setCookie(c, "blog_session", sid, cookieOptions(c, 604800));

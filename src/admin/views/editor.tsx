@@ -65,12 +65,13 @@ export function Editor({
         </div>
         <label>
           Description
-          <input
+          <textarea
             name="description"
-            maxlength={300}
+            rows={3}
+            maxlength={160}
             value={post?.description || ""}
             placeholder="A short summary for readers and search engines"
-          />
+          ></textarea>
         </label>
         <fieldset>
           <legend>Tags</legend>

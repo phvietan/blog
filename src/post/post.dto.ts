@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-const pageSchema = z.coerce.number().finite()
+const pageSchema = z.coerce
+  .number()
+  .finite()
   .transform((page) => Math.max(1, Math.min(100_000, Math.floor(page))));
 const feedSchema = z.object({
   page: pageSchema.catch(1),

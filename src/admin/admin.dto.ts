@@ -2,8 +2,8 @@ import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
 import {
   MAX_MARKDOWN,
+  excerpt,
   parseMarkdown,
-  plainText,
   slugify,
 } from "../lib/content";
 import { validationError } from "../lib/validation";
@@ -22,7 +22,7 @@ const postSchema = z
     slug: z.string().max(120).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
       message: "Use a URL slug containing lowercase letters, numbers, and hyphens.",
     }),
-    description: z.string().max(300, "Keep the description under 300 characters."),
+    description: z.string().max(160, "Keep the description under 160 characters."),
     status: z.enum(["draft", "published"], { error: "Invalid post status." }),
     published_at: z.string().transform((value, ctx) => {
       const date = new Date(/T\d\d:\d\d$/.test(value) ? `${value}:00Z` : value);
@@ -78,7 +78,7 @@ export async function parsePost(form: FormData) {
     const post = postSchema.parse({
       title,
       slug: field(form, "slug") || slugify(String(data.slug || title)),
-      description: field(form, "description") || String(data.description || plainText(body).slice(0, 240)),
+      description: field(form, "description") || excerpt(String(data.description || body)),
       status: field(form, "status"),
       published_at: field(form, "published_at") || String(data.date || new Date().toISOString()),
       body,

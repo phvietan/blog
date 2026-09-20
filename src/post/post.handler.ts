@@ -5,7 +5,7 @@ import { getPost, listPosts, incrementViews } from "../databases/post.db";
 import { allTags } from "../databases/tag.db";
 import { getCommentPage, listApprovedComments } from "../databases/comment.db";
 import { hasLike, createLike, countLikes } from "../databases/like.db";
-import { visitor, rateLimit } from "../middlewares/auth.middleware";
+import { visitor, sessionUser } from "../middlewares/auth.middleware";
 import { now } from "../lib/crypto";
 import { markdown } from "../lib/content";
 import { parseFeed, pageNumber } from "./post.dto";
@@ -48,9 +48,10 @@ export const article: Handler<App> = async (c) => {
     commentPage =
       (await getCommentPage(c.env.DB, post.id, parseId(commentId))) ||
       commentPage;
-  const [thread, liked] = await Promise.all([
+  const [thread, liked, user] = await Promise.all([
     listApprovedComments(c.env.DB, post.id, commentPage),
     hasLike(c.env.DB, post.id, visitorId),
+    sessionUser(c),
   ]);
   return c.html(
     Article({
@@ -61,14 +62,13 @@ export const article: Handler<App> = async (c) => {
       liked,
       commentPage,
       moreComments: thread.more,
+      adminSub: user?.sub,
     }),
   );
 };
 export const like: Handler<App> = async (c) => {
   const post = await getPost(c.env.DB, c.req.param("slug")!);
   if (!post || post.status !== "published") return c.notFound();
-  if (!(await rateLimit(c, "like", 60, 60)))
-    return c.text("Please try again in a minute.", 429);
   await createLike(c.env.DB, post.id, await visitor(c), now());
   const likes = await countLikes(c.env.DB, post.id);
   if (c.req.header("Accept")?.includes("application/json"))

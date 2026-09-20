@@ -52,7 +52,7 @@ commentForm?.addEventListener('submit', async event => {
  button.disabled = true;
  try {
   const result = await postForm(commentForm);
-  commentForm.reset(); cancelReply();
+  commentForm.reset(); cancelReply(); window.turnstile?.reset();
   statusText(commentForm.querySelector('[data-comment-status]'), result.message);
   if (result.published) location.href = `?comment=${result.id}#comment-${result.id}`;
  } catch (error) { statusText(commentForm.querySelector('[data-comment-status]'),error.message); }
